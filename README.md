@@ -17,3 +17,10 @@ A pesar de esto, te aseguro que el contenido de algunos apartados te puede ayuda
 🔝  ***Nota***: en el mismo archivo dejo los recursos utilizados y/o fuentes consultadas como referencia.
 
 ### ¡Espero que pueda ser de utilidad!
+
+
+## Contenido
+
+### Javascript
+
+- [Promises]()
