@@ -23,4 +23,4 @@ A pesar de esto, te aseguro que el contenido de algunos apartados te puede ayuda
 
 ### Javascript
 
-- [Promises]()
+- [Promises](https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/1.Promises.md)
