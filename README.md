@@ -23,9 +23,7 @@ A pesar de esto, te aseguro que el contenido de algunos apartados te puede ayuda
 
 ### Cursos
 
-#### The Complete Junior to Senior Roadmap
-
-- 
+- [The complete junior to senior roadmap - NOTES](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/complete-junior-to-senior-roadmap.md)
 
 
 ### Wiki
