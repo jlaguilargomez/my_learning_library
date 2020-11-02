@@ -1,6 +1,6 @@
 # Directives
 
-Podemos encontrar 2 tipos de diretivas:
+Podemos encontrar 2 tipos de directivas:
 
 - Attribute directives: look like a normal HTML attribute (could use databinding or event binding). Only affect/change element they are added to `[ngClass] ...`
 - Structural directives: affect a whole area in the DOM (elements get added/reordered ...) `[ngFor] ...`
