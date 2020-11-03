@@ -35,3 +35,6 @@ A pesar de esto, te aseguro que el contenido de algunos apartados te puede ayuda
 #### Angular
 
 - [Directives](https://github.com/jlaguilargomez/my_learning_library/blob/master/angular/1.Directives.md)
+- [Manejo errores](https://github.com/jlaguilargomez/my_learning_library/blob/master/angular/2.Manejo-errores.md)
+
+
