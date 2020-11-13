@@ -29,9 +29,9 @@ A pesar de esto, te aseguro que el contenido de algunos apartados te puede ayuda
 ### Wiki
 #### Javascript
 
-- [Promises](https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/1.Promises.md)
-- [Call,apply,bind](https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/2.Call%2Capply%2Cbind.md)
-- [Data Structures](https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/3.Data-structures.md)
+- [Promises](https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/Promises.md)
+- [Call,apply,bind](https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/Call%2Capply%2Cbind.md)
+- [Data Structures](https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/Data-structures.md)
 - [Object.entries() & Object.fromEntries()](
 https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/Object.entries_%26_Object.fromEntries.md)
 - [Factory functions](https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/Factory-functions.md)
