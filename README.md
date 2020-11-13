@@ -34,6 +34,7 @@ A pesar de esto, te aseguro que el contenido de algunos apartados te puede ayuda
 - [Data Structures](https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/3.Data-structures.md)
 - [Object.entries() & Object.fromEntries()](
 https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/Object.entries_%26_Object.fromEntries.md)
+- [Factory functions](https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/Factory-functions.md)
 
 
 #### Angular
