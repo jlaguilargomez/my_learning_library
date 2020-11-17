@@ -35,6 +35,8 @@ A pesar de esto, te aseguro que el contenido de algunos apartados te puede ayuda
 - [Object.entries() & Object.fromEntries()](
 https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/Object.entries_%26_Object.fromEntries.md)
 - [Factory functions](https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/Factory-functions.md)
+- [Optional chaining](
+https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/Optional-chaining.md)
 
 
 #### Angular
