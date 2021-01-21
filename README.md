@@ -1,6 +1,6 @@
 # My Learning Library
 
-Soy de los que siguen tomando notas en un cuaderno de toda la vida ✍🏻 , desde que empecé en este mundo del desarrollo web **he acumulado bastantes cuadenos con los aprendizajes que he ido obteniendo** 📚.
+Soy de los que siguen tomando notas en un cuaderno de toda la vida ✍🏻 , desde que empecé en este mundo del desarrollo web **he acumulado bastantes cuadernos con los aprendizajes que he ido obteniendo** 📚.
 Dicen que la escritura manual ayuda al aprendizaje, pero, siendo sinceros, cuando vuelves a ellos a buscar algo en concreto, eso de no tener una "barrita" de búsqueda para localizar un término concreto hace que pueda tirarme bastante tiempo sólo intentando encontrar lo que busco 🙇🏽.
 
 Por eso me decidí a acostumbrarme a tomar notas en la aplicación [Notion](https://www.notion.so/product). Y a migrar todo el "conocimiento" que había ido recopilando a esta aplicación. 
