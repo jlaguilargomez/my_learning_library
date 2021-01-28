@@ -47,5 +47,5 @@ https://github.com/jlaguilargomez/my_learning_library/blob/master/javascript/Opt
 
 ### Testing
 
-- [JEST](https://github.com/jlaguilargomez/jest_learning
+- [JEST](https://github.com/jlaguilargomez/jest_learning)
 
