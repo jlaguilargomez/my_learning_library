@@ -23,7 +23,14 @@ A pesar de esto, te aseguro que el contenido de algunos apartados te puede ayuda
 
 ### Cursos
 
-- [The complete junior to senior roadmap](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/complete-junior-to-senior-roadmap.md)
+- The complete Junior to Senior Roadmap:
+    - [Intro to SSH](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/junior-to-senior/intro-ssh.md)
+    - [Module bundler](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/junior-to-senior/module-bundler.md)
+    - [Performance part 1](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/junior-to-senior/performance-1.md)
+    - [React + Redux](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/junior-to-senior/react-redux.md)
+    - [Security](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/junior-to-senior/security.md)
+    - [Typescript](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/junior-to-senior/typescript.md)
+    
 - [Master Node JS & Deno.js](https://github.com/jlaguilargomez/node_academind-course)
 
 
