@@ -31,7 +31,8 @@ A pesar de esto, te aseguro que el contenido de algunos apartados te puede ayuda
     - [Security](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/junior-to-senior/security.md)
     - [Typescript](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/junior-to-senior/typescript.md)
     
-- [Master Node JS & Deno.js](https://github.com/jlaguilargomez/node_academind-course)
+- Master Node JS & Deno.js
+    - [Understanding the basics](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/master-node-deno/uderstanding-the-basics.md)
 
 
 ### Wiki
