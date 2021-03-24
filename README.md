@@ -23,6 +23,14 @@ A pesar de esto, te aseguro que el contenido de algunos apartados te puede ayuda
 
 ### Cursos
 
+- Become a Senior React Developer:
+    - [Intro](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/become-react-developer/intro.md)
+    - [Setting up e-commerce](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/become-react-developer/setting-up-e-commerce-project.md)
+    - [Routing in Reaact](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/become-react-developer/routing-in-react.md)
+    - [Components + Forms](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/become-react-developer/components%2Bforms.md)
+    - [Firebase + User Auth](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/become-react-developer/firebase%2Buser-authentication.md)
+    - [Redux 1](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/become-react-developer/redux1.md) 
+
 - The complete Junior to Senior Roadmap:
     - [Intro to SSH](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/junior-to-senior/intro-ssh.md)
     - [Module bundler](https://github.com/jlaguilargomez/my_learning_library/blob/master/courses/junior-to-senior/module-bundler.md)
