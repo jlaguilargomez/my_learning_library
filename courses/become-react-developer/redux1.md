@@ -647,3 +647,53 @@ Buscamos que, si se clica sobre un elemento existente, se añada un +1 a este el
 Creamos un nuevo archivo `cart.utils.js` para implementar esta funcionalidad. Tal y como se hace referencia en el curso:
 
 > *Utility functions allow us to keep our files clean and organize functions that we may need in multiple files in one location*
+
+## Cart item component
+
+Creamos el componente que mostrará el producto elegido, su precio y cantidad en el dropdown del carrito.
+
+`cart-item.component`
+
+```jsx
+const CartItem = ({ item: { imageUrl, price, name, quantity } }) => (
+  <div className='cart-item'>
+    <img src={imageUrl} alt='item' />
+    <div className='item-details'>
+      <span className='name'>{name}</span>
+      <span className='price'>
+        {quantity} x ${price}
+      </span>
+    </div>
+  </div>
+);
+```
+
+Una vez creado lo utilizamos en el `CartDrodown`, pero claro, para que renderice contenido necesitaremos pasarle el ITEM, ¿verdad?.
+
+Es por ello por lo que vamos a conectar (`connect()`) el STATE del CART al componente `CartDropdown`
+
+```jsx
+const CartDropdown = ({ cartItems }) => (
+  <div className='cart-dropdown'>
+    <div className='cart-items'>
+      {cartItems.map((cartItem) => (
+        <CartItem key={cartItem.id} item={cartItem}></CartItem>
+      ))}
+    </div>
+    <CustomButton>GO TO CHECKOUT</CustomButton>
+  </div>
+);
+
+// Conectamos el STATE a los PROPS que recibirá el CartItem para renderizar los ITEMS
+const mapStateToProps = ({ cart: { cartItems } }) => ({
+  cartItems
+});
+
+export default connect(mapStateToProps)(CartDropdown);
+```
+
+Et voilá, hemos añadido los diferentes elementos al carrito:
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/dc6a8f01-5340-49cf-8316-99b8362b0ee4/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/dc6a8f01-5340-49cf-8316-99b8362b0ee4/Untitled.png)
+
+Vemos nuevamente como REDUX se comporta de forma unidireccional y su uso, una vez configurado correctamente, es bastante intuitivo. Mucho más que andar con Input() y Output() como en Angular.
