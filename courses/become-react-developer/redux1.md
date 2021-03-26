@@ -697,3 +697,45 @@ Et voilá, hemos añadido los diferentes elementos al carrito:
 ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/dc6a8f01-5340-49cf-8316-99b8362b0ee4/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/dc6a8f01-5340-49cf-8316-99b8362b0ee4/Untitled.png)
 
 Vemos nuevamente como REDUX se comporta de forma unidireccional y su uso, una vez configurado correctamente, es bastante intuitivo. Mucho más que andar con Input() y Output() como en Angular.
+
+## Selectors in Redux
+
+Queremos ahora que se muestre el número total de elementos que tenemos en el carrito, en el propio icono del carrito.
+
+En el componente que renderiza el icono del carrito, `CartIcon`, necesitamos el STATE del carro de compra.
+
+Pero ojo, no necesitamos todo el estado, tan sólo la cantidad acumulada de elementos, es por esto por lo que en este caso, se considera que estamos trabajando o añadiendo u "SELECTOR":
+
+```jsx
+const CartIcon = ({ toggleCartDropdown, itemCount }) => {
+  console.log('cartItems: ', itemCount);
+  return (
+    <div className='cart-icon' onClick={toggleCartDropdown}>
+      <ShoppingIcon className='shopping-icon' />
+      <span className='item-count'>{itemCount}</span>
+    </div>
+  );
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  toggleCartDropdown: () => dispatch(toggleCartDropdown())
+});
+
+**const mapStateToProps = ({ cart: { cartItems } }) => ({
+  itemCount: cartItems.reduce((acc, cartItem) => (acc += cartItem.quantity), 0)
+});**
+
+export default connect(mapStateToProps, mapDispatchToProps)(CartIcon);
+```
+
+Si dejamos esto así, vamos a ejecturar dicho `mapStateToProps`, como todos, cada vez que se modifique el contenido del STATE de la aplicación. 
+
+Wanna see it?
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5e7f31ac-dc7e-4e3e-9051-2e75b989419e/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5e7f31ac-dc7e-4e3e-9051-2e75b989419e/Untitled.png)
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0cf74a68-4139-425f-97fd-66ccddb50257/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0cf74a68-4139-425f-97fd-66ccddb50257/Untitled.png)
+
+Y eso sólo abriendo y cerrando el Dropdown. Imaginemos para miles de conectores al State de la APP.
+
+Si es el mismo valor, no deberíamos volver a pasarlo como PROP al componente para que no se renderice de nuevo. Vamos a usar el concepto "Memoization" y una librería para tal fin
