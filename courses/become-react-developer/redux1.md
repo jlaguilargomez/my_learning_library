@@ -738,4 +738,105 @@ Wanna see it?
 
 Y eso sólo abriendo y cerrando el Dropdown. Imaginemos para miles de conectores al State de la APP.
 
-Si es el mismo valor, no deberíamos volver a pasarlo como PROP al componente para que no se renderice de nuevo. Vamos a usar el concepto "Memoization" y una librería para tal fin
+Si es el mismo valor, no deberíamos volver a pasarlo como PROP al componente para que no se renderice de nuevo. Vamos a usar el concepto "Memoization" y una librería para tal fin 
+
+Si quieres repasar el concepto...
+
+[Memoization](https://www.notion.so/Memoization-dab6a10c300543b8864617962db802b8)
+
+## Reselect library
+
+Utilizaremos la librería "Reselect", que va a incrementar la ya de por sí potente (en cuanto a funcionalidad) librería de Redux:
+
+[reselect](https://www.npmjs.com/package/reselect)
+
+Para poder reutilizar los "Selectores":
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/795fbe31-e12c-4165-94f2-0e65f292de70/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/795fbe31-e12c-4165-94f2-0e65f292de70/Untitled.png)
+
+Vamos a cambiar la estructura de carpetas que tenemos, y creamos el archivo `cart.selectors.js`
+
+```jsx
+import { createSelector } from 'reselect';
+
+// 2 tipos de selectores que podemos crear: Input / Alpha
+const selectCart = (state) => state.cart;
+
+export const selectCartItems = createSelector([selectCart], (cart) => cart.cartItems);
+
+export const selectCartItemsCount = createSelector([selectCartItems], (cartItems) => cartItems.reduce((acc, cartItem) => (acc += cartItem.quantity), 0));
+```
+
+Que vamos a utilizar en nuestro componente para poder renderizar el contador de elementos en el carrito, utilizando Memoization para ello (así no se refresca el componente continuamente):
+
+From ...
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/15070023-fb2e-4136-a670-1e23b3382f63/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/15070023-fb2e-4136-a670-1e23b3382f63/Untitled.png)
+
+To ...
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f658d240-337b-4e35-86f4-1f352eff0341/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f658d240-337b-4e35-86f4-1f352eff0341/Untitled.png)
+
+## Quick correction on CartIcon re-rendering
+
+*Hello everyone!*
+
+*I made one mistake in explaining our `CartIcon` component and the `itemCount`! Due to `itemCount` being a primitive (integer), redux will do a shallow equality check under the hood between state changes in `mapStateToProps`. In this case having a selector does not save us on any re-renders of the CartIcon component. If our overall state changes but the itemCount value stays the same between these changes,  redux's shallow equality check will see that `itemCount` is the same value as last time and save us a re-render. It's still valuable to keep the logic for the reduce in a selector though because we do still want to memoize the calculation of `itemCount` (our reduce logic), and without a selector our reduce logic would still be running on every state change regardless of the final calculated value of `itemCount`.*
+
+*The take away here is that redux's `mapStateToProps` has a shallow equality check for every value in the object; it won't replace values if they pass a shallow equality check which means it won't needlessly re-render, but if we have transformation logic it's still valuable to memoize it with a selector to save us running duplicate logic to get the same output.*
+
+*Thank you to student Bruce Liu for pointing this out to me!*
+
+*Happy coding everyone!*
+
+## User selector
+
+Vamos a realizar la misma operación de configurar los "selectors" con el "componente" de REDUX `users`
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7c1c40c9-9b88-46cb-bb72-44a06f2ae319/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7c1c40c9-9b88-46cb-bb72-44a06f2ae319/Untitled.png)
+
+Una vez creados los selectors que utilizaremos en el componente `Header` (y allí donde corresponda), vamos a reconfigurar este:
+
+`header.component.jsx`
+
+```jsx
+// configuración previa
+const mapStateToProps = ({ user: { currentUser }, cart: { hidden } }) => ({
+  currentUser,
+  hidden
+});
+
+// configuración base
+const mapStateToProps = (state) => ({
+  currentUser: selectCurrentUser(state),
+  hidden: selectCartHidden(state)
+});
+
+// ahora imagina que tienes que hacer esto 50 veces, no resulta práctico, para ello utilizamos otra de las funciones de la librería "reselect": createStructuredSelector
+import { createStructuredSelector } from 'reselect';
+
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
+  hidden: selectCartHidden
+});
+```
+
+Comprobamos que el componente sigue funcionando sin ningún problema:
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/69eb5d1c-3bbc-4f66-a6fa-26e31348d919/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/69eb5d1c-3bbc-4f66-a6fa-26e31348d919/Untitled.png)
+
+Buscamos el resto de componentes que utilicen la función `mapStateToProps` para modificarlos con la nueva lógica que acabamos de incorporar de la librería `reselect`
+
+Aunque sólo utilizemos un selector en el componente, como es el caso de `App.js`, es conveniente utilizar `createStructuredSelector` para permitir en un futuro la posibilidad de añadir nuevos "selectors" sin modificar mucho el código
+
+Continuamos aplicando el mismo patrón en todos los componentes que utilizan un `mapStateToProps`:
+
+Ejemplo en `cart-icon.component.js`
+
+```jsx
+const mapStateToProps = createStructuredSelector({
+  itemCount: selectCartItemsCount
+});
+```
+
+Es muy común que usemos esta librería (`reselect`) cada vez que implementamos REDUX, para utilizar la técnica de `memoization` en nuestra APP
