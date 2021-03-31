@@ -840,3 +840,116 @@ const mapStateToProps = createStructuredSelector({
 ```
 
 Es muy común que usemos esta librería (`reselect`) cada vez que implementamos REDUX, para utilizar la técnica de `memoization` en nuestra APP
+
+## Checkout page
+
+Vamos a completar el carrito de la compra: mostraremos un mensaje cuando no haya productos en el mismo y habilitaremos el botón para poder ir a la página de compra en la que se confirman los productos.
+
+Una vez creado el mensaje que se mostrará en el carrito si no hay elementos:
+
+```jsx
+const CartDropdown = ({ cartItems }) => (
+  <div className='cart-dropdown'>
+    <div className='cart-items'>
+      {cartItems.length ? cartItems.map((cartItem) => <CartItem key={cartItem.id} item={cartItem}></CartItem>) : <span className='empty-message'>Your cart is empty</span>}
+    </div>
+    <CustomButton>GO TO CHECKOUT</CustomButton>
+  </div>
+);
+```
+
+Pasamos a trabajar con el nuevo componente (page), `CheckoutPage`:
+
+```jsx
+import './checkout.styles.scss';
+
+const CheckoutPage = () => <div>Checkout page</div>;
+
+export default CheckoutPage;
+```
+
+Una vez creado este, para permitir la navegación desde el `cart-dropdown.component.jsx`, debemos utilizar `withRouter` de la librería `react-router-dom`:
+
+```jsx
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+**import { withRouter } from 'react-router-dom';**
+
+import { selectCartItems } from '../../redux/cart/cart.selectors';
+import CustomButton from '../custom-button/custom-button.component';
+import CartItem from '../cart-item/cart-item.component';
+
+import './cart-dropdown.styles.scss';
+
+const CartDropdown = ({ cartItems, history }) => (
+  <div className='cart-dropdown'>
+    <div className='cart-items'>
+      {cartItems.length ? cartItems.map((cartItem) => <CartItem key={cartItem.id} item={cartItem}></CartItem>) : <span className='empty-message'>Your cart is empty</span>}
+    </div>
+    <CustomButton **onClick={() => history.push('/checkout')}**>GO TO CHECKOUT</CustomButton>
+  </div>
+);
+
+// Conectamos el STATE a los PROPS que recibirá el CartItem para renderizar los ITEMS
+const mapStateToProps = createStructuredSelector({
+  cartItems: selectCartItems
+});
+
+**export default withRouter(connect(mapStateToProps)(CartDropdown));**
+```
+
+**Presta atención a como la función `withRouter()` recibe como parámetro el propio componente, para permitir que este obtenga el parámetro `history`en sus PROPS. Al igual que hicimos antes mediante `connect()` para poder trabajar con `cartItems`**
+
+## Checkout page 2
+
+Creamos un nuevo selector que nos permita obtener el precio total del carrito y lo conectamos al `checkout.component.jsx`:
+
+```jsx
+export const selectCartTotal = createSelector([selectCartItems], (cartItems) => cartItems.reduce((acc, cartItem) => (acc += cartItem.quantity * cartItem.price), 0));
+```
+
+Realizamos la implementación de esta nueva funcionalidad, de manera básica, para comprobar que funciona:
+
+```jsx
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+
+import { selectCartItems, selectCartTotal } from '../../redux/cart/cart.selectors';
+
+import './checkout.styles.scss';
+
+const CheckoutPage = ({ cartItems, total }) => {
+  return (
+    <div className='checkout-page'>
+      <div className='checkout-header'>
+        <div className='header-block'>
+          <span>Product</span>
+        </div>
+        <div className='header-block'>
+          <span>Description</span>
+        </div>
+        <div className='header-block'>
+          <span>Quantity</span>
+        </div>
+        <div className='header-block'>
+          <span>Price</span>
+        </div>
+        <div className='header-block'>
+          <span>Remove</span>
+        </div>
+      </div>
+      {cartItems.map((cartItem) => cartItem.name)}
+      <div className='total'>
+        <span>TOTAL: ${total}</span>
+      </div>
+    </div>
+  );
+};
+
+const mapStateToProps = createStructuredSelector({
+  cartItems: selectCartItems,
+  total: selectCartTotal
+});
+
+export default connect(mapStateToProps)(CheckoutPage);
+```
