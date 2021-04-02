@@ -953,3 +953,294 @@ const mapStateToProps = createStructuredSelector({
 
 export default connect(mapStateToProps)(CheckoutPage);
 ```
+
+## Extensible code
+
+> *"Everything is nice, small and simple"*
+
+Es cierto, ninguno de los archivos que hemos creado durante esta parte del curso ocupan más de unas cuantas líneas, algunos de ellos muy pocas de hecho. Estamos modulando y haciendo un código bastante mantenible.
+
+**Esta es la clave. La modulación o fragmentación del código en pequeños bloques sencillos de entender, implementar o mejorar en caso necesario.**
+
+## Dispatch action shortland
+
+Estamos trabajando ahora con `cart-dropdown`, vamos a dotar de una nueva funcionalidad al componente que permita que, una vez que hemos accedido a la página de resumen de compra, se cierre el dropdown (cambie el estado del `toggleCartDropdown` a false)
+
+Habitualmente, o hasta ahora, hemos visto que la operativa para lanzar un "*dispatch*" dentro de un componente es mediante una función que creamos (`mapDispatchToProps` ) y la conectamos mediante `connect(...)` .
+
+```jsx
+const CartDropdown = ({ cartItems, history, toggleCartDropdown }) => (
+  <div className='cart-dropdown'>
+    <div className='cart-items'>
+      {cartItems.length ? cartItems.map((cartItem) => <CartItem key={cartItem.id} item={cartItem}></CartItem>) : <span className='empty-message'>Your cart is empty</span>}
+    </div>
+    <CustomButton
+      onClick={() => {
+        history.push('/checkout');
+        toggleCartDropdown();
+      }}>
+      GO TO CHECKOUT
+    </CustomButton>
+  </div>
+);
+
+// Conectamos el STATE a los PROPS que recibirá el CartItem para renderizar los ITEMS
+const mapStateToProps = createStructuredSelector({
+  cartItems: selectCartItems
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  toggleCartDropdown: () => dispatch(toggleCartDropdown())
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CartDropdown));
+```
+
+Pues realmente no es necesario, ya que al usar `connect(mapStateToProps)`, internamente estamos pasando también el "dispatch".... 
+
+Vamos a verlo, hacemos lo que hemos dicho y vamos a ver qué tenemos dentro de `otherProps`:
+
+```jsx
+const CartDropdown = ({ cartItems, history, ...otherProps }) => {
+  console.log('otherProps: ', otherProps);
+  return (
+    <div className='cart-dropdown'>
+      <div className='cart-items'>
+        {cartItems.length ? cartItems.map((cartItem) => <CartItem key={cartItem.id} item={cartItem}></CartItem>) : <span className='empty-message'>Your cart is empty</span>}
+      </div>
+      <CustomButton
+        onClick={() => {
+          history.push('/checkout');
+          toggleCartDropdown();
+        }}>
+        GO TO CHECKOUT
+      </CustomButton>
+    </div>
+  );
+};
+
+// Conectamos el STATE a los PROPS que recibirá el CartItem para renderizar los ITEMS
+const mapStateToProps = createStructuredSelector({
+  cartItems: selectCartItems
+});
+
+// const mapDispatchToProps = (dispatch) => ({
+//   toggleCartDropdown: () => dispatch(toggleCartDropdown())
+// });
+
+export default withRouter(connect(mapStateToProps)(CartDropdown));
+```
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a4806fdb-0c7f-47b3-af97-7f15a2bba27b/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a4806fdb-0c7f-47b3-af97-7f15a2bba27b/Untitled.png)
+
+Ojo al método `dispatch`, que se recibe como PROP y podemos utilizar dentro del propio componente.
+
+```jsx
+<CustomButton
+    onClick={() => {
+      history.push('/checkout');
+      dispatch(toggleCartDropdown());
+    }}>
+    GO TO CHECKOUT
+  </CustomButton>
+```
+
+## Checkout item component
+
+Creamos ahora los elementos de la página del "checkout". 
+
+Cada uno de ellos, evidentemente, es un componente propio que también vamos a crear ahora: `checkout-item.component`
+
+Para crear la X de eliminar elemento, utilizamos los UTF-8 Dingbats, que son como "iconos" reconocibles por todos los navegadores:
+
+[HTML Unicode UTF-8](https://www.w3schools.com/charsets/ref_utf_dingbats.asp)
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b53cbae5-1eb7-4e4b-995a-68aec32df5cb/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b53cbae5-1eb7-4e4b-995a-68aec32df5cb/Untitled.png)
+
+Por ejemplo, en nuestro caso queremos utilizar la X:
+
+```jsx
+<span className='remove-button'>&#10005;</span>
+```
+
+Trabajamos ahora en la maquetación básica (ya desarrollaremos luego la funcionalidad de manejar los componentes):
+
+```jsx
+import './checkout-item.styles.scss';
+
+const CheckoutItem = ({ cartItem: { name, imageUrl, price, quantity } }) => (
+  <div className='checkout-item'>
+    <div className='image-container'>
+      <img src={imageUrl} alt='item' />
+    </div>
+    <span className='name'>{name}</span>
+    <span className='quantity'>{quantity}</span>
+    <span className='price'>{price}</span>
+    <span className='remove-button'>&#10005;</span>
+  </div>
+);
+
+export default CheckoutItem;
+```
+
+Y renderizamos el componente desde el `checkout.component.jsx` pasándole como PROP el `cartItem`:
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d78ba365-9da5-49c8-9b7d-aafa897761d6/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d78ba365-9da5-49c8-9b7d-aafa897761d6/Untitled.png)
+
+## Remove items from cart
+
+En la anterior clase hemos trabajado con el nuevo componente `checkout-item`, vamos ahora a dotar a este de la funcionalidad para eliminar y modificar la cantidad de elementos del carrito:
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/90feff3c-630a-4ed2-aff5-98ddd1f5a775/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/90feff3c-630a-4ed2-aff5-98ddd1f5a775/Untitled.png)
+
+Creamos una nueva "action" que nos permita eliminar objetos de la lista de productos. El procedimiento es el mismo que hemos seguido siempre:
+
+1. Creamos un nuevo "type" en `cart.types.js`:
+
+```jsx
+export const CartActionTypes = {
+  TOGGLE_CART_DROPDOWN: 'TOGGLE_CART_DROPDOWN',
+  ADD_ITEM: 'ADD_ITEM',
+  **REMOVE_ITEM: 'REMOVE_ITEM'**
+};
+```
+
+2. Preparamos la acción en `cart.actions.js`:
+
+```jsx
+import { CartActionTypes } from './cart.types';
+
+export const toggleCartDropdown = () => ({
+  type: CartActionTypes.TOGGLE_CART_DROPDOWN
+});
+
+export const addItem = (item) => ({
+  type: CartActionTypes.ADD_ITEM,
+  payload: item
+});
+
+**export const removeItem = (item) => ({
+  type: CartActionTypes.REMOVE_ITEM,
+  payload: item
+});**
+```
+
+3. Dotamos de un nuevo "case" al reducer en `cart.reducer.js`:
+
+```jsx
+import { CartActionTypes } from './cart.types';
+import { addItemToCart, removeItemFromCart } from './cart.utils';
+
+const INITIAL_STATE = {
+  hidden: true,
+  cartItems: []
+};
+
+const cartReducer = (state = INITIAL_STATE, action) => {
+  switch (action.type) {
+    case CartActionTypes.TOGGLE_CART_DROPDOWN:
+      return {
+        ...state,
+        hidden: !state.hidden
+      };
+
+    case CartActionTypes.ADD_ITEM:
+      return {
+        ...state,
+        cartItems: addItemToCart(state.cartItems, action.payload)
+      };
+
+    **case CartActionTypes.REMOVE_ITEM:
+      return {
+        ...state,
+        cartItems: removeItemFromCart(state.cartItems, action.payload)
+      };**
+
+    default:
+      return state;
+  }
+};
+
+export default cartReducer;
+```
+
+Fijare que en lugar de implementar la funcionalidad directamente aquí, la he transferido al archivo `cart.utils.js`:
+
+```jsx
+export const addItemToCart = (cartItems, cartItemToAdd) => {
+  const existingCartItem = cartItems.find((cartItem) => cartItem.id === cartItemToAdd.id);
+  console.log('existingCartItem: ', existingCartItem);
+
+  if (existingCartItem) {
+    return cartItems.map((cartItem) => {
+      return cartItem.id === cartItemToAdd.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem;
+    });
+  }
+
+  return [...cartItems, { ...cartItemToAdd, quantity: 1 }];
+};
+
+**export const removeItemFromCart = (cartItems, cartItemToRemove) => {
+  return cartItems.filter((cartItem) => cartItem.id !== cartItemToRemove.id);
+};**
+```
+
+4. Conectamos el componente al "dispatch" que acabamos de crear:
+
+```jsx
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
+
+import { selectCartItems } from '../../redux/cart/cart.selectors';
+import { removeItem } from '../../redux/cart/cart.actions';
+import './checkout-item.styles.scss';
+
+const CheckoutItem = ({ cartItem, removeItem }) => {
+  return (
+    <div className='checkout-item'>
+      <div className='image-container'>
+        <img src={cartItem.imageUrl} alt='item' />
+      </div>
+      <span className='name'>{cartItem.name}</span>
+      <span className='quantity'>{cartItem.quantity}</span>
+      <span className='price'>{cartItem.price}</span>
+      <span className='remove-button' onClick={() => removeItem(cartItem)}>
+        &#10005;
+      </span>
+    </div>
+  );
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  removeItem: (item) => dispatch(removeItem(item))
+});
+
+export default connect(null, mapDispatchToProps)(CheckoutItem);
+```
+
+¡Hecho!, con esto ya podemos eliminar los objetos del carrito clicando en la X correspondiente.
+
+## Remove items at checkout
+
+Nos toca trabajar con el último item que queda para finalizar el carrito: los botones de incrementar y reducir la cantidad de elementos de dicho producto. 
+
+Es una clase larga, pero el desarrollo es muy similar al que hemos hecho hasta ahora. Tan sólo ten en cuenta que, SIEMPRE, debes pasar una copia del objeto actual (state) para que el componente de REACT sea consciente y renderice nuevamente el cambio.
+
+Una muestra de la función que utilizamos para esto dentro de `cart.utils.js`:
+
+```jsx
+export const removeItemFromCart = (cartItems, cartItemToRemove) => {
+  const existingCartItem = cartItems.find((cartItem) => cartItem.id === cartItemToRemove.id);
+  console.log('existingCartItem: ', existingCartItem);
+
+  if (existingCartItem.quantity === 1) {
+    return cartItems.filter((item) => item.id !== cartItemToRemove.id);
+  }
+
+  return cartItems.map((cartItem) => {
+    return cartItem.id === cartItemToRemove.id ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem;
+  });
+};
+```
+
+**Section finished!**
